@@ -22,4 +22,8 @@ export default withPWA({
   register: true,
   skipWaiting: true,
   customWorkerDir: 'public',
+  // Ensure service worker path/scope align with GitHub Pages basePath
+  basePath: isProd ? '/explorando' : '',
+  scope: isProd ? '/explorando/' : '/',
+  sw: 'sw.js',
 })(nextConfig);

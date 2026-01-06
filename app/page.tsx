@@ -21,6 +21,22 @@ export default function Home() {
     };
 
     addTestEntry();
+
+    // Ensure a SW registers even if next-pwa doesn't inject for app router
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      const isProd = process.env.NODE_ENV === 'production';
+      const basePath = isProd ? '/explorando' : '';
+      const swUrl = `${basePath}/sw.js`;
+      const scope = `${basePath}/`;
+      navigator.serviceWorker
+        .register(swUrl, { scope })
+        .then((reg) => {
+          console.log('✓ Service worker registered:', reg.scope);
+        })
+        .catch((err) => {
+          console.error('✗ Service worker registration failed:', err);
+        });
+    }
   }, []);
 
   return (
