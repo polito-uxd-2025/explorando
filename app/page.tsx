@@ -1,6 +1,28 @@
+'use client';
+
+import { useEffect } from 'react';
 import Image from "next/image";
+import { db } from '@/lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export default function Home() {
+  useEffect(() => {
+    const addTestEntry = async () => {
+      try {
+        await addDoc(collection(db, 'test-entries'), {
+          timestamp: serverTimestamp(),
+          message: 'Test entry from page load',
+          url: typeof window !== 'undefined' ? window.location.href : 'unknown',
+        });
+        console.log('✓ Test entry added to Firestore');
+      } catch (error) {
+        console.error('✗ Error adding test entry:', error);
+      }
+    };
+
+    addTestEntry();
+  }, []);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
