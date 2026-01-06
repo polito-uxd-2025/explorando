@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from "next/image";
 import { db } from '@/lib/firebase';
+import { getApp } from 'firebase/app';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 interface BeforeInstallPromptEvent extends Event {
@@ -15,6 +16,10 @@ export default function Home() {
   const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
+    console.log('API key:', process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
+    console.log('Project ID:', getApp().options.projectId);
+
+    
     const addTestEntry = async () => {
       try {
         await addDoc(collection(db, 'test-entries'), {
