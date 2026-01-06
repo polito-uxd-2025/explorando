@@ -16,10 +16,10 @@ export default function Home() {
   const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
-    console.log('API key:', process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
-    console.log('Project ID:', getApp().options.projectId);
+    //console.log('API key:', process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
+    //console.log('Project ID:', getApp().options.projectId);
 
-    
+
     const addTestEntry = async () => {
       try {
         await addDoc(collection(db, 'test-entries'), {
