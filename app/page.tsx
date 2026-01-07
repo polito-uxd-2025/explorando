@@ -6,6 +6,8 @@ import { db } from '@/lib/firebase';
 import { getApp } from 'firebase/app';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
+import { InstallButton } from '../src/components/install-button';
+
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
@@ -16,43 +18,24 @@ export default function Home() {
   const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
-    //console.log('API key:', process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
-    //console.log('Project ID:', getApp().options.projectId);
-
-
-    const addTestEntry = async () => {
-      try {
-        await addDoc(collection(db, 'test-entries'), {
-          timestamp: serverTimestamp(),
-          message: 'Test entry from page load',
-          url: typeof window !== 'undefined' ? window.location.href : 'unknown',
-        });
-        console.log('✓ Test entry added to Firestore');
-      } catch (error) {
-        console.error('✗ Error adding test entry:', error);
-      }
-    };
-
-    addTestEntry();
-
     // Listen for beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setInstallPrompt(e as BeforeInstallPromptEvent);
-      console.log('✓ Install prompt ready');
+      console.log('Install prompt ready');
     };
 
     // Check if app is already installed
     if (window.matchMedia('(display-mode: standalone)').matches) {
       setIsInstalled(true);
-      console.log('✓ App is running as standalone');
+      console.log('App is running as standalone');
     }
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     window.addEventListener('appinstalled', () => {
       setIsInstalled(true);
       setInstallPrompt(null);
-      console.log('✓ App installed');
+      console.log('App installed');
     });
 
     return () => {
@@ -102,19 +85,6 @@ export default function Home() {
           </p>
         </div>
         <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          {installPrompt && !isInstalled && (
-            <button
-              onClick={handleInstall}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-blue-600 px-5 text-white transition-colors hover:bg-blue-700 dark:hover:bg-blue-500 md:w-auto"
-            >
-              📲 Install App
-            </button>
-          )}
-          {isInstalled && (
-            <div className="flex h-12 w-full items-center justify-center rounded-full bg-green-100 px-5 text-green-800 dark:bg-green-900 dark:text-green-100">
-              ✓ App Installed
-            </div>
-          )}
           <a
             className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
             href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
@@ -140,6 +110,13 @@ export default function Home() {
           </a>
         </div>
       </main>
+      {installPrompt && !isInstalled &&(
+        <InstallButton
+          onClick={handleInstall}
+          className="absolute bottom-0 left-0 right-0"
+        >
+        </InstallButton>
+      )}
     </div>
   );
 }
