@@ -249,7 +249,7 @@ export default function Home() {
                     a.imageUrl ?? a.ImageUrl ?? a.Imgsrc ?? a.ImgSrc ?? a.image ?? a.imgSrc ?? undefined
                   ) as string | undefined);
                   return (
-                    <div className="min-w-[280px] max-w-[280px]" key={a.id}>
+                    <div key={a.id}>
                       <PreviewCard
                         title={title}
                         imageUrl={imageUrl}
