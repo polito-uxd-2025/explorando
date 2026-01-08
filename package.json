@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@previewjs/config-helper-nextjs": "^1.0.29",
     "firebase": "^12.7.0",
     "minimatch": "^10.1.1",
     "motion": "^12.24.7",
