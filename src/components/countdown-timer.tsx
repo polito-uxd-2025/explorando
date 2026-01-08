@@ -71,7 +71,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
   const padZero = (num: number) => String(num).padStart(2, "0");
 
   return (
-    <div className={`text-center text-black border-3 p-2 rounded-3xl text-xl font-bold ${className || ""}`}>
+    <div className={`text-center text-white p-2 rounded-3xl text-xl font-bold bg-accent-500 ${className || ""}`}>
       {padZero(timeRemaining.days)}:{padZero(timeRemaining.hours)}:
       {padZero(timeRemaining.minutes)}:{padZero(timeRemaining.seconds)}{" "}
       rimanenti al prossimo refresh
