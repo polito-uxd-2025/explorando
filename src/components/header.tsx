@@ -19,7 +19,7 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
   };
 
   return (
-    <div className={`flex w-full p-5 text-black bg-white text-2xl ${className || ""}`}>
+    <div className={`flex w-full p-5 text-black bg-white text-2xl ${className || ""} sticky top-0`}>
         {showBack && (
         <motion.button 
             className="cursor-pointer" 

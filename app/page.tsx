@@ -217,8 +217,8 @@ export default function Home() {
   }, [activities]);
 
   return (
-    <div className="flex min-h-screen bg-zinc-50 font-sans">
-      <main className="flex flex-col h-auto w-full p-6">
+    <div className="flex h-full bg-zinc-50 font-sans">
+      <main className="flex flex-col h-full w-full p-6">
         {targetEpoch ? (
           <CountdownTimer targetUnixEpoch={targetEpoch} className='mx-7'/>
         ) : (
@@ -226,7 +226,7 @@ export default function Home() {
             Caricamento timer...
           </div>
         )}
-        <section className="mt-8" id="activities">
+        <section className="mt-8 flex-1 overflow-y-auto" id="activities">
           {loadingActivities && (
             <div className="text-sm text-zinc-600">Caricamento attività...</div>
           )}
