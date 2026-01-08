@@ -31,7 +31,7 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
         </motion.button>
         )}
         <span className="justify-self-center text-center font-bold w-full">
-            eXplorando
+            e<span className="text-accent-500">X</span>plorando
         </span>
     </div>
   );
