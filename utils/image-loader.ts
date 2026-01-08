@@ -5,6 +5,7 @@ export default function imageLoader({ src }: { src: string }) {
   const basePath = '/explorando';
   
 
+  if(src.startsWith("http")) return src;
   // If we are on GitHub Actions, use the prefix
   if (process.env.NEXT_PUBLIC_GITHUB_ACTIONS === 'true') {
     console.log(`Using basePath: ${basePath}`);
