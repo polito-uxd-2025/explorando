@@ -253,6 +253,7 @@ export default function Home() {
                       <PreviewCard
                         title={title}
                         imageUrl={imageUrl}
+                        linkUrl={`/activity/${a.id}`}
                       />
                     </div>
                   );
