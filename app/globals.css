@@ -57,10 +57,9 @@
 }
 
 body {
-  background: var(--background);
+  background: white;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-  padding-bottom: env(safe-area-inset-bottom);
 }
 
 @supports (height: 100dvh) {
