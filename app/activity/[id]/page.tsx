@@ -3,6 +3,7 @@ import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 
 import { Button } from '@/src/components/custom-button';
 import { ImageCarousel } from '@/src/components/image-carousel';
+import { DistanceDisplay } from './distance-display';
 
 import { FaPlay } from "react-icons/fa";
 import { FaCalendarAlt } from "react-icons/fa";
@@ -29,11 +30,16 @@ export default async function ActivityDetail({ params }: { params: Promise<{ id:
             </div>
         );
     }
+        
 
     return (
         <div className="flex h-full bg-white flex-col text-gray-900">
             <div className="flex flex-col gap-1 flex-1 overflow-y-auto">
-                <ImageCarousel images={activityData["Gallery"] || []} className="min-h-[250px] max-h-[250px]"/>
+                <div className="relative min-h-[250px] max-h-[250px]">
+                    <ImageCarousel images={activityData["Gallery"] || []} className="h-full"/>
+                    <div className="absolute bottom-0 right-0 p-4 m-2 bg-gray-50 z-10 rounded text-black pointer-events-none">{activityData["XP"]} <span className="text-accent-500">X</span>P</div>
+                    <DistanceDisplay activityLocation={{ latitude: activityData["Location"]?.latitude || 0, longitude: activityData["Location"]?.longitude || 0 }} />
+                </div>
                 <h1 className="text-2xl font-bold text-gray-900 px-6 pt-6">{activityData["Title"]}</h1>
                 <div className="px-6 pb-6">{activityData["Description"]}</div>
             </div>
