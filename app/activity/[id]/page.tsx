@@ -8,6 +8,7 @@ import { DistanceDisplay } from './distance-display';
 import { FaPlay } from "react-icons/fa";
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaBookmark } from "react-icons/fa";
+import { act } from 'react';
 
 export async function generateStaticParams() {
     const activitiesSnapshot = await getDocs(collection(db, 'Activity'));
@@ -30,7 +31,6 @@ export default async function ActivityDetail({ params }: { params: Promise<{ id:
             </div>
         );
     }
-        
 
     return (
         <div className="flex h-full bg-white flex-col text-gray-900">
@@ -38,7 +38,7 @@ export default async function ActivityDetail({ params }: { params: Promise<{ id:
                 <div className="relative min-h-[250px] max-h-[250px]">
                     <ImageCarousel images={activityData["Gallery"] || []} className="h-full"/>
                     <div className="absolute bottom-0 right-0 p-4 m-2 bg-gray-50 z-10 rounded text-black pointer-events-none">{activityData["XP"]} <span className="text-accent-500">X</span>P</div>
-                    <DistanceDisplay activityLocation={{ latitude: activityData["Location"]?.latitude || 0, longitude: activityData["Location"]?.longitude || 0 }} />
+                    <DistanceDisplay activityLocation={{ latitude: activityData["Position"]?.latitude || 0, longitude: activityData["Position"]?.longitude || 0 }} />
                 </div>
                 <h1 className="text-2xl font-bold text-gray-900 px-6 pt-6">{activityData["Title"]}</h1>
                 <div className="px-6 pb-6">{activityData["Description"]}</div>
