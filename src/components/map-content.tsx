@@ -41,15 +41,26 @@ interface MapContentProps {
 }
 
 export function MapContent({ activityData }: MapContentProps) {
-    const { position: userPosition } = useGeolocation();
+    const { position: userPosition, error: geoError } = useGeolocation();
     
     const activityLatitude = activityData?.latitude;
     const activityLongitude = activityData?.longitude;
     const title = activityData?.Title || 'Activity';
     
     // Debug logging
+    useEffect(() => {
+        console.log('MapContent: mounted', {
+            userPosition,
+            geoError,
+            activityLatitude,
+            activityLongitude,
+            activityData,
+        });
+    }, []);
+    
     console.log('Map Debug:', {
         userPosition,
+        geoError,
         activityLatitude,
         activityLongitude,
         activityData,

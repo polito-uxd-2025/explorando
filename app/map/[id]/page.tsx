@@ -13,17 +13,23 @@ const MapContent = dynamic(() => import('@/src/components/map-content').then(mod
 export default function MapPage({ params }: { params: Promise<{ id: string }> }) {
     const [activityData, setActivityData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchActivity = async () => {
             try {
+                console.log('MapPage: fetching activity...');
                 const { id } = await params;
+                console.log('MapPage: resolved params, id:', id);
                 const activityDoc = await getDoc(doc(db, 'Activity', id));
                 const data = activityDoc.exists() ? activityDoc.data() : null;
+                console.log('MapPage: activity data:', data);
                 if(data !== null)
                     setActivityData(data["Position"]);
-            } catch (error) {
-                console.error('Failed to fetch activity:', error);
+                setError(null);
+            } catch (err: any) {
+                console.error('MapPage: Failed to fetch activity:', err);
+                setError(err.message ?? 'Failed to load activity');
             } finally {
                 setLoading(false);
             }
@@ -32,9 +38,14 @@ export default function MapPage({ params }: { params: Promise<{ id: string }> })
         fetchActivity();
     }, [params]);
 
+    if (error) {
+        return <div className="w-full h-screen flex items-center justify-center text-red-500">Error: {error}</div>;
+    }
+
     if (loading) {
         return <div className="w-full h-screen bg-gray-200 animate-pulse" />;
     }
 
+    console.log('MapPage: rendering MapContent');
     return <MapContent activityData={activityData} />;
 }
