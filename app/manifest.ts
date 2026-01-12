@@ -4,7 +4,7 @@ export const dynamic = 'force-static'
 
 export default function manifest(): MetadataRoute.Manifest {
   const isProd = process.env.NODE_ENV === 'production';
-  const basePath = isProd ? '/explorando' : '';
+  const basePath = false ? '/explorando' : '';
   
   return {
     name: 'eXplorando',
