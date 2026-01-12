@@ -10,14 +10,17 @@
   },
   "dependencies": {
     "@previewjs/config-helper-nextjs": "^1.0.29",
+    "@types/leaflet": "^1.9.21",
     "embla-carousel-react": "^8.6.0",
     "firebase": "^12.7.0",
+    "leaflet": "^1.9.4",
     "minimatch": "^10.1.1",
     "motion": "^12.24.7",
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "react-leaflet": "^5.0.0-rc.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

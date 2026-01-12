@@ -21,9 +21,6 @@ export function DistanceDisplay({ activityLocation }: DistanceDisplayProps) {
         );
     }
 
-    console.log('User position:', position);
-    console.log('Target activity location:', activityLocation);
-
     const distance = getHaversineDistance(position, activityLocation);
 
     return (
