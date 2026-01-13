@@ -1,6 +1,6 @@
 'use client';
 
-import { useGeolocation } from '@/app/hooks/useGeolocation';
+import { useGeolocation } from '@/hooks/useGeolocation';
 import { getHaversineDistance } from '@/lib/haversine';
 
 interface DistanceDisplayProps {

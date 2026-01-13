@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, Circle, CircleMarker } from 'react-leaflet';
 import L from 'leaflet';
-import { useGeolocation } from '@/app/hooks/useGeolocation';
+import { useGeolocation } from '@/hooks/useGeolocation';
 import 'leaflet/dist/leaflet.css';
 
 // Fix default Leaflet marker icons in Next.js bundlers
