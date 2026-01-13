@@ -38,9 +38,10 @@ const redIcon = new L.Icon({
 
 interface MapContentProps {
     activityData: any;
+    className?: string;
 }
 
-export function MapContent({ activityData }: MapContentProps) {
+export function MapContent({ activityData, className }: MapContentProps) {
     const { position: userPosition, error: geoError } = useGeolocation();
 
     const activityLatitude = activityData?.latitude;
@@ -119,7 +120,7 @@ export function MapContent({ activityData }: MapContentProps) {
     }
 
     return (
-        <div className="w-full h-screen">
+        <div className={`w-full h-screen ${className ?? ''}`}>
             <MapContainer
                 center={[centerLatitude, centerLongitude]}
                 zoom={13}

@@ -35,10 +35,10 @@ export default async function ActivityDetail({ params }: { params: Promise<{ id:
                 <div className="px-6 pb-6">{activityData["Description"]}</div>
             </div>
             <div className="p-6 pt-0 flex w-full flex-col gap-2">
-                <Button className="w-full" href={`/map/${id}`}><FaPlay />Avvia</Button>
+                <Button layoutClass="w-full" href={`/map/${id}`}><FaPlay />Avvia</Button>
                 <div className="flex flex-row w-full gap-2">
-                    <Button className="w-full"><FaCalendarAlt />Partecipa</Button>
-                    <Button className="w-full"><FaBookmark />Salva</Button>
+                    <Button layoutClass="w-full"><FaCalendarAlt />Partecipa</Button>
+                    <Button layoutClass="w-full"><FaBookmark />Salva</Button>
                 </div>
             </div>
         </div>
