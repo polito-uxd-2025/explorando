@@ -5,10 +5,10 @@ import dynamic from 'next/dynamic';
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
-const MapContent = dynamic(() => import('@/src/components/map-content').then(mod => ({ default: mod.MapContent })), {
+/* const MapContent = dynamic(() => import('@/src/components/map-content').then(mod => ({ default: mod.MapContent })), {
     ssr: false,
     loading: () => <div className="w-full h-screen bg-gray-200 animate-pulse" />
-});
+}); */
 
 export default function MapPage({ params }: { params: Promise<{ id: string }> }) {
     const [activityData, setActivityData] = useState<any>(null);
@@ -53,7 +53,9 @@ export default function MapPage({ params }: { params: Promise<{ id: string }> })
                 <p>Page loaded! Activity data: {JSON.stringify(activityData)}</p>
                 <p>Loading: {String(loading)}, Error: {error}</p>
             </div>
-            <MapContent activityData={activityData} />
+            {
+                //<MapContent activityData={activityData} />
+            }
         </div>
     );
 }
