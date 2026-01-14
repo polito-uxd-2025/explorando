@@ -126,10 +126,13 @@ export default function Profile({ params }: { params: Promise<{ username: string
 
   return (
     <div className="flex h-full bg-white font-sans flex-col">     
-      {userData && (
-        <div className="flex flex-col w-full text-black">
-          <div className="flex flex-row p-4">
-            {userData["Avatar"] && userData["Avatar"][1] && (
+      <div className="flex flex-col w-full text-black">
+        <div className="flex flex-row p-4">
+          {/* Avatar */}
+          {loading ? (
+            <div className="w-[100px] h-[100px] m-4 rounded-full bg-gray-200 animate-pulse flex-shrink-0" />
+          ) : (
+            userData?.["Avatar"]?.[1] && (
               <Image 
                 src={userData["Avatar"][1]} 
                 alt="Avatar" 
@@ -137,16 +140,43 @@ export default function Profile({ params }: { params: Promise<{ username: string
                 height={100} 
                 className="rounded-full m-4" 
               />
-            )}
-            <div className="flex flex-col flex-1">
-              <div className="flex flex-row p-5 pl-1 pb-1">
-                <div className="flex flex-col text-2xl">
-                  <div>{userData["DisplayName"]}</div>
-                  <div className="text-gray-600">{userData["Username"]}</div>
-                </div>
-                <div className="text-4xl pl-2">{levelFromXp(userData["XP"])}</div>
+            )
+          )}
+          
+          <div className="flex flex-col flex-1">
+            <div className="flex flex-row p-5 pl-1 pb-1">
+              <div className="flex flex-col text-2xl">
+                {/* Display Name and Username */}
+                {loading ? (
+                  <>
+                    <div className="w-40 h-7 bg-gray-200 animate-pulse rounded mb-2" />
+                    <div className="w-32 h-6 bg-gray-200 animate-pulse rounded" />
+                  </>
+                ) : (
+                  <>
+                    <div>{userData?.["DisplayName"]}</div>
+                    <div className="text-gray-600">{userData?.["Username"]}</div>
+                  </>
+                )}
               </div>
-              {badges && badges.length > 0 && (
+              
+              {/* Level */}
+              {loading ? (
+                <div className="w-12 h-10 bg-gray-200 animate-pulse rounded ml-2" />
+              ) : (
+                <div className="text-4xl pl-2">{userData && levelFromXp(userData["XP"])}</div>
+              )}
+            </div>
+            
+            {/* Badges */}
+            {loading ? (
+              <div className="flex flex-row gap-4 flex-wrap">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="w-10 h-10 bg-gray-200 animate-pulse rounded-lg" />
+                ))}
+              </div>
+            ) : (
+              badges && badges.length > 0 && (
                 <div className="flex flex-row gap-4 flex-wrap">
                   {badges.map((badge: BadgeData) => (
                     <div key={badge.id} className="flex flex-col items-center">
@@ -160,33 +190,56 @@ export default function Profile({ params }: { params: Promise<{ username: string
                     </div>
                   ))}
                 </div>
-              )}
-            </div>
+              )
+            )}
           </div>
         </div>
-      )}
+      </div>
+      
       <div className="bg-black w-full h-1"></div>
+      
       <div className="flex flex-col">
-        {
+        {loading ? (
+          // Feed skeleton
+          <>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex flex-col w-full p-3">
+                <div className="flex flex-row px-3">
+                  <div className="w-5 h-5 rounded-full bg-gray-200 animate-pulse mr-4 flex-shrink-0" />
+                  <div className="w-24 h-5 bg-gray-200 animate-pulse rounded mr-2" />
+                  <div className="w-32 h-5 bg-gray-200 animate-pulse rounded" />
+                  <div className="ml-auto w-28 h-5 bg-gray-200 animate-pulse rounded" />
+                </div>
+                <div className="flex flex-row p-2 bg-gray-200 rounded mt-2 h-24 animate-pulse">
+                  <div className="w-[100px] h-[100px] bg-gray-300 rounded-lg mr-4 flex-shrink-0" />
+                  <div className="flex flex-col flex-1 gap-2">
+                    <div className="w-3/4 h-6 bg-gray-300 rounded" />
+                    <div className="w-full h-4 bg-gray-300 rounded" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </>
+        ) : (
           feedItems.length > 0 ? (
-              feedItems.map((item: FeedItemData) => {
-                return <Feed 
-                  key={item.id}
-                  Date={item.Datetime}
-                  Username={item.User["Username"]}
-                  UserAvatar={item.User["Avatar"] ? item.User["Avatar"][1] : '/default-avatar.png'}
-                  FeedIcon={item.Activity["Imgsrc"]}
-                  FeedTitle={item.Activity["Title"]}
-                  FeedContext="ha completato"
-                  FeedContent={item.Comment}
-                />
-              })
+            feedItems.map((item: FeedItemData) => {
+              return <Feed 
+                key={item.id}
+                Date={item.Datetime}
+                Username={item.User["Username"]}
+                UserAvatar={item.User["Avatar"] ? item.User["Avatar"][1] : '/default-avatar.png'}
+                FeedIcon={item.Activity["Imgsrc"]}
+                FeedTitle={item.Activity["Title"]}
+                FeedContext="ha completato"
+                FeedContent={item.Comment}
+              />
+            })
           ) : (
             <div className="flex items-center justify-center p-8 text-gray-500">
               No feed items yet
             </div>
           )
-        }
+        )}
       </div>
     </div>
   );
