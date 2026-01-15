@@ -217,7 +217,7 @@ export default function Home() {
   }, [activities]);
 
   return (
-    <div className="flex h-full bg-zinc-50 font-sans">
+    <div className="flex h-full bg-white font-sans">
       <main className="flex flex-col h-full w-full p-6 pr-0">
         {targetEpoch ? (
           <CountdownTimer targetUnixEpoch={targetEpoch} className='mx-7 mr-13'/>
@@ -227,9 +227,6 @@ export default function Home() {
           </div>
         )}
         <section className="mt-8 flex-1 overflow-y-auto" id="activities">
-          {loadingActivities && (
-            <div className="text-sm text-zinc-600">Caricamento attività...</div>
-          )}
           {error && (
             <div className="text-sm text-red-600">{error}</div>
           )}
@@ -240,7 +237,11 @@ export default function Home() {
           {Object.entries(activitiesByCategory).map(([catId, items]) => (
             <div key={catId} className="mb-8">
               <h2 className="mb-3 text-lg font-semibold text-zinc-900">
-                {categoryNames[catId] ?? catId}
+                {loadingActivities ? (
+                  <div className="h-7 w-32 bg-zinc-200 rounded animate-pulse"></div>
+                ) : (
+                  categoryNames[catId] ?? catId
+                )}
               </h2>
               <div className="flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none]">
                 {items.map((a) => {

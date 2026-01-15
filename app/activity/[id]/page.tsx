@@ -1,22 +1,13 @@
 import { db } from '@/lib/firebase';
-import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 
 import { Button } from '@/src/components/custom-button';
 import { ImageCarousel } from '@/src/components/image-carousel';
-import { DistanceDisplay } from './distance-display';
+import { DistanceDisplay } from '@/src/components/distance-display';
 
 import { FaPlay } from "react-icons/fa";
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaBookmark } from "react-icons/fa";
-import { act } from 'react';
-
-export async function generateStaticParams() {
-    const activitiesSnapshot = await getDocs(collection(db, 'Activity'));
-    
-    return activitiesSnapshot.docs.map((doc) => ({
-        id: doc.id,
-    }));
-}
 
 export default async function ActivityDetail({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -44,10 +35,9 @@ export default async function ActivityDetail({ params }: { params: Promise<{ id:
                 <div className="px-6 pb-6">{activityData["Description"]}</div>
             </div>
             <div className="p-6 pt-0 flex w-full flex-col gap-2">
-                <Button className="w-full"><FaPlay />Avvia</Button>
+                <Button layoutClass="w-full" href={`/map/${id}`}><FaPlay />Avvia</Button>
                 <div className="flex flex-row w-full gap-2">
-                    <Button className="w-full"><FaCalendarAlt />Partecipa</Button>
-                    <Button className="w-full"><FaBookmark />Salva</Button>
+                    <Button layoutClass="w-full"><FaCalendarAlt />Partecipa</Button>
                 </div>
             </div>
         </div>

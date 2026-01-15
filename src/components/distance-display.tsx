@@ -1,6 +1,6 @@
 'use client';
 
-import { useGeolocation } from '@/app/hooks/useGeolocation';
+import { useGeolocation } from '@/hooks/useGeolocation';
 import { getHaversineDistance } from '@/lib/haversine';
 
 interface DistanceDisplayProps {
@@ -20,9 +20,6 @@ export function DistanceDisplay({ activityLocation }: DistanceDisplayProps) {
             </div>
         );
     }
-
-    console.log('User position:', position);
-    console.log('Target activity location:', activityLocation);
 
     const distance = getHaversineDistance(position, activityLocation);
 
