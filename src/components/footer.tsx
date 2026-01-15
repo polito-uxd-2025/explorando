@@ -6,9 +6,7 @@ import { usePathname } from "next/navigation";
 import { FaHome } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { IoIosPerson } from "react-icons/io";
-import { db, rtdb } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
-import { ref, get } from "firebase/database";
+import { getCurrentUser } from "@/models/user";
 
 interface FooterProps {
     className?: string;
@@ -18,6 +16,7 @@ export const Footer: React.FC<FooterProps> = ({ className } ) => {
   const pathname = usePathname();
   const [avatarDefault, setAvatarDefault] = useState<string | null>(null);
   const [avatarActive, setAvatarActive] = useState<string | null>(null);
+  const [currentUsername, setCurrentUsername] = useState<string | null>(null);
 
   const navItems = [
     { href: "/", icon: FaHome },
@@ -29,15 +28,10 @@ export const Footer: React.FC<FooterProps> = ({ className } ) => {
     let alive = true;
     (async () => {
       try {
-        const userIdSnap = await get(ref(rtdb, 'userid'));
-        if (!userIdSnap.exists()) return;
-        const userId = userIdSnap.val();
-        if (typeof userId !== 'string' || !userId) return;
+        const userData = await getCurrentUser();
+        if (!alive) return;
 
-        const userDoc = await getDoc(doc(db, 'User', userId));
-        if (!alive || !userDoc.exists()) return;
-        const data = userDoc.data() as any;
-        const avatar = data?.Avatar;
+        const avatar = userData?.Avatar;
         if (Array.isArray(avatar) && avatar.length >= 2) {
           const first = typeof avatar[0] === 'string' ? avatar[0].trim() : '';
           const second = typeof avatar[1] === 'string' ? avatar[1].trim() : '';
@@ -48,8 +42,12 @@ export const Footer: React.FC<FooterProps> = ({ className } ) => {
           setAvatarDefault(trimmed);
           setAvatarActive(trimmed);
         }
+
+        if (userData?.Username) {
+          setCurrentUsername(userData.Username);
+        }
       } catch (err) {
-        console.error('Footer: failed to fetch avatar', err);
+        console.error('Footer: failed to fetch user data', err);
       }
     })();
 
@@ -61,8 +59,13 @@ export const Footer: React.FC<FooterProps> = ({ className } ) => {
       {navItems.map(({ href, icon: Icon }) => {
         const isActive = pathname === href;
         const isProfile = href === "/me" || href === "/profile";
+        
+        // Check if we're on the current user's profile page or /me
+        const isCurrentUserProfile = pathname === "/me" || 
+          (currentUsername && pathname === `/profile/${currentUsername}`);
+        
         const avatarSrc = isProfile
-          ? (isActive ? (avatarActive || avatarDefault) : avatarDefault)
+          ? (isCurrentUserProfile ? (avatarActive || avatarDefault) : avatarDefault)
           : null;
         return (
           <Link 
