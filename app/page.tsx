@@ -218,7 +218,7 @@ export default function Home() {
 
   return (
     <div className="flex h-full bg-white font-sans">
-      <main className="flex flex-col h-full w-full p-6 pr-0">
+      <main className="flex flex-col h-full w-full pl-6 pr-0">
         {targetEpoch ? (
           <CountdownTimer targetUnixEpoch={targetEpoch} className='mx-7 mr-13'/>
         ) : (

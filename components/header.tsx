@@ -42,8 +42,9 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
   const isRoot = pathname === "/";
   const isCommunity = pathname === "/community";
   const isMe = pathname === "/me";
+  const isEvents = pathname === "/events";
   const isProfile = pathname.startsWith("/profile/");
-  let showBack = !(isRoot || isCommunity || isMe);
+  let showBack = !(isRoot || isCommunity || isMe || isEvents);
   if (isProfile) {
     const parts = pathname.split("/");
     const profileId = parts.length >= 3 ? parts[2] : null;
@@ -59,7 +60,7 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
   };
 
   return (
-    <div className={`relative flex flex-row w-full p-3 text-black bg-white text-2xl ${className || ""} sticky top-0`}>
+    <div className={`relative flex flex-row w-full p-4 text-black bg-white text-2xl ${className || ""} sticky top-0`}>
         {showBack && (
         <motion.button 
             className="cursor-pointer" 

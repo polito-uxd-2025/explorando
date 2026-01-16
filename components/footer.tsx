@@ -7,6 +7,7 @@ import { FaHome } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { IoIosPerson } from "react-icons/io";
 import { getCurrentUser } from "@/models/user";
+import { FaCalendarDay } from "react-icons/fa";
 
 import { useHaptic } from "react-haptic";
 
@@ -24,6 +25,7 @@ export const Footer: React.FC<FooterProps> = ({ className } ) => {
 
   const navItems = [
     { href: "/", icon: FaHome },
+    { href: "/events", icon: FaCalendarDay },
     { href: "/community", icon: FaPeopleGroup },
     { href: "/me", icon: IoIosPerson },
   ];

@@ -26,7 +26,7 @@ export const PreviewCard: React.FC<PreviewCardProps> = ({
             animate={{ opacity: 1, y: 0 }}
             onClick={() => vibrate()}
             >
-                <LazyImage src={imageUrl || ''} alt={title} width={250} height={300} className="bg-gray-400 m-2 text-white rounded-xl w-[250px] h-[300px] object-cover"/>
+                <LazyImage src={imageUrl || ''} alt={title} width={250} height={250} className="bg-gray-400 m-2 text-white rounded-xl w-[250px] h-[250px] object-cover"/>
                 <span className="text-left px-3 pb-2 text-xl">{title}</span>
             </motion.button>
         </Link>
