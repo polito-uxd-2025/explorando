@@ -38,7 +38,7 @@ export default async function ActivityDetail({ params }: { params: Promise<{ id:
             <div className="p-6 pt-0 flex w-full flex-col gap-2">
                 <Button layoutClass="w-full" href={`/map/${id}`} enabled={isEnabled} className={!isEnabled ? 'bg-gray-400 hover:bg-gray-400' : ''}><FaPlay />Avvia</Button>
                 <div className="flex flex-row w-full gap-2">
-                    <Button layoutClass="w-full"><FaCalendarAlt />Partecipa</Button>
+                    <Button layoutClass="w-full" href={`/events?id=${id}`}><FaCalendarAlt />Partecipa</Button>
                 </div>
             </div>
         </div>

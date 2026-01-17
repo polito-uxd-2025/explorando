@@ -21,7 +21,7 @@ export const PreviewCard: React.FC<PreviewCardProps> = ({
     return (
         <Link href={linkUrl || ''}>
             <motion.div 
-            className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+            className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer border border-gray-200"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             onClick={() => vibrate()}

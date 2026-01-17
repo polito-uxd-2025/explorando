@@ -1,13 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
+import { useSearchParams } from 'next/navigation';
+import { collection, query, where, getDocs, Timestamp, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { OrganizedSessionData } from '@/models/organized-session';
 import OrganizedSessionCard from '@/components/organized-session-card';
 import OrganizedSessionCardSkeleton from '@/components/organized-session-card-skeleton';
 
 export default function EventPage() {
+  const searchParams = useSearchParams();
+  const activityId = searchParams.get('id');
+  
   const [events, setEvents] = useState<OrganizedSessionData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,10 +23,16 @@ export default function EventPage() {
       try {
         const now = Timestamp.now();
         const eventsRef = collection(db, 'OrganizedSession');
-        const q = query(
-          eventsRef,
-          where('Datetime', '>', now)
-        );
+        
+        // Build query with optional activity filter
+        const queryConstraints = [where('Datetime', '>', now)];
+        
+        if (activityId) {
+          const activityRef = doc(db, 'Activity', activityId);
+          queryConstraints.push(where('Activity', '==', activityRef));
+        }
+        
+        const q = query(eventsRef, ...queryConstraints);
         
         const querySnapshot = await getDocs(q);
         const eventsData: OrganizedSessionData[] = [];
@@ -56,7 +66,7 @@ export default function EventPage() {
     };
 
     fetchUpcomingEvents();
-  }, []);
+  }, [activityId]);
 
   return (
     <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-8">
