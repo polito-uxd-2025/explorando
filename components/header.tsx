@@ -4,10 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { motion } from "motion/react"
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useRouter, usePathname } from "next/navigation";
+import { Suspense } from 'react';
 
 import { useHaptic } from "react-haptic";
 import { getCurrentUser } from '@/models/user';
 import { Button } from './custom-button';
+import { HeaderContent } from './header-content';
 
 import Image from 'next/image';
 
@@ -20,6 +22,7 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
   const pathname = usePathname();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [points, setPoints] = useState<number>(0);
+  const [showBack, setShowBack] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -38,19 +41,6 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
     };
   }, []);
 
-  // Show back icon except for root, community, me, and the current user's profile
-  const isRoot = pathname === "/";
-  const isCommunity = pathname === "/community";
-  const isMe = pathname === "/me";
-  const isEvents = pathname === "/events";
-  const isProfile = pathname.startsWith("/profile/");
-  let showBack = !(isRoot || isCommunity || isMe || isEvents);
-  if (isProfile) {
-    const parts = pathname.split("/");
-    const profileId = parts.length >= 3 ? parts[2] : null;
-    console.log(profileId, currentUserId);
-    if (profileId && currentUserId && profileId === currentUserId) showBack = false;
-  }
   const { vibrate } = useHaptic();
 
 
@@ -60,7 +50,17 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
   };
 
   return (
-    <div className={`relative flex flex-row w-full p-4 text-black bg-white text-2xl ${className || ""} sticky top-0`}>
+    <>
+      <Suspense fallback={null}>
+        <HeaderContent 
+          pathname={pathname} 
+          currentUserId={currentUserId}
+          onBackClick={handleClick}
+          showBack={showBack}
+          setShowBack={setShowBack}
+        />
+      </Suspense>
+      <div className={`relative flex flex-row w-full p-4 text-black bg-white text-2xl ${className || ""} sticky top-0`}>
         {showBack && (
         <motion.button 
             className="cursor-pointer" 
@@ -80,6 +80,7 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
             {points}
           </Button>
         </div>
-    </div>
+      </div>
+    </>
   );
 };
