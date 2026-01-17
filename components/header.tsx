@@ -41,6 +41,19 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const handler = (event: Event) => {
+      const detail = (event as CustomEvent<{ points: number }>).detail;
+      if (detail && typeof detail.points === 'number') {
+        setPoints(detail.points);
+      }
+    };
+    window.addEventListener('points:update', handler as EventListener);
+    return () => {
+      window.removeEventListener('points:update', handler as EventListener);
+    };
+  }, []);
+
   const { vibrate } = useHaptic();
 
 

@@ -1,5 +1,5 @@
 import { ref, get } from 'firebase/database';
-import { doc, getDoc, DocumentReference, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { doc, getDoc, DocumentReference, collection, query, where, getDocs, addDoc, updateDoc, arrayUnion, runTransaction } from 'firebase/firestore';
 import { rtdb, db } from '@/lib/firebase';
 
 export interface UserData {
@@ -8,6 +8,7 @@ export interface UserData {
   Badges: DocumentReference[];
   DisplayName: string;
   Friends: DocumentReference[];
+  Items: DocumentReference[];
   Username: string;
   XP: number;
   Points: number;
@@ -117,4 +118,48 @@ export async function createUser(
     console.error('Failed to create user:', err);
     throw new Error(err.message || 'Failed to create user');
   }
+}
+
+/**
+ * Adds an item reference to the current user's Items array
+ */
+export async function addItemToUser(itemId: string): Promise<void> {
+  try {
+    const currentUser = await getCurrentUser();
+    const userRef = doc(db, 'User', currentUser.id);
+    const itemRef = doc(db, 'Items', itemId);
+    await updateDoc(userRef, {
+      Items: arrayUnion(itemRef),
+    });
+  } catch (err: any) {
+    console.error('Failed to add item to user:', err);
+    throw new Error(err.message || 'Failed to add item to user');
+  }
+}
+
+/**
+ * Purchases an item: ensures sufficient Points, deducts cost, and adds the item reference.
+ */
+export async function purchaseItem(itemId: string, cost: number): Promise<void> {
+  const currentUser = await getCurrentUser();
+  const userRef = doc(db, 'User', currentUser.id);
+  const itemRef = doc(db, 'Items', itemId);
+
+  await runTransaction(db, async (transaction) => {
+    const userSnap = await transaction.get(userRef);
+    if (!userSnap.exists()) {
+      throw new Error('User document not found');
+    }
+
+    const data = userSnap.data() as Partial<UserData>;
+    const currentPoints = Number(data.Points ?? 0);
+    if (currentPoints < cost) {
+      throw new Error('Fondi insufficienti');
+    }
+
+    transaction.update(userRef, {
+      Points: currentPoints - cost,
+      Items: arrayUnion(itemRef),
+    });
+  });
 }

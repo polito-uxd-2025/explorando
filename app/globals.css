@@ -17,6 +17,18 @@
   --accent-50: #fff5ed;
   --accent-500: #ff570a;
   --accent-600: #e64d00;
+
+  /* Shop colors */
+  --shop-50: #fef3c7;
+  --shop-100: #fde68a;
+  --shop-200: #fcd34d;
+  --shop-300: #fbbf24;
+  --shop-400: #f59e0b;
+  --shop-500: #eab308;
+  --shop-600: #ca8a04;
+  --shop-700: #a16207;
+  --shop-800: #854d0e;
+  --shop-900: #713f12;
 }
 
 @theme inline {
@@ -32,6 +44,16 @@
   --color-accent-50: var(--accent-50);
   --color-accent-500: var(--accent-500);
   --color-accent-600: var(--accent-600);
+  --color-shop-50: var(--shop-50);
+  --color-shop-100: var(--shop-100);
+  --color-shop-200: var(--shop-200);
+  --color-shop-300: var(--shop-300);
+  --color-shop-400: var(--shop-400);
+  --color-shop-500: var(--shop-500);
+  --color-shop-600: var(--shop-600);
+  --color-shop-700: var(--shop-700);
+  --color-shop-800: var(--shop-800);
+  --color-shop-900: var(--shop-900);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
