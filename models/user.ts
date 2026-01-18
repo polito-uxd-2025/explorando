@@ -163,3 +163,70 @@ export async function purchaseItem(itemId: string, cost: number): Promise<void> 
     });
   });
 }
+
+/**
+ * Adds a user to the current user's friends list
+ */
+export async function addFriend(targetUserId: string): Promise<void> {
+  try {
+    const currentUser = await getCurrentUser();
+    const currentUserRef = doc(db, 'User', currentUser.id);
+    const targetUserRef = doc(db, 'User', targetUserId);
+    
+    await updateDoc(currentUserRef, {
+      Friends: arrayUnion(targetUserRef),
+    });
+  } catch (err: any) {
+    console.error('Failed to add friend:', err);
+    throw new Error(err.message || 'Failed to add friend');
+  }
+}
+
+/**
+ * Removes a user from the current user's friends list
+ */
+export async function removeFriend(targetUserId: string): Promise<void> {
+  try {
+    const currentUser = await getCurrentUser();
+    const currentUserRef = doc(db, 'User', currentUser.id);
+    const targetUserRef = doc(db, 'User', targetUserId);
+    
+    // Use runTransaction to safely remove from array
+    await runTransaction(db, async (transaction) => {
+      const userSnap = await transaction.get(currentUserRef);
+      if (!userSnap.exists()) {
+        throw new Error('User document not found');
+      }
+
+      const data = userSnap.data() as Partial<UserData>;
+      const currentFriends = data.Friends || [];
+      
+      // Filter out the target user reference
+      const updatedFriends = currentFriends.filter(
+        (friendRef) => friendRef.id !== targetUserId
+      );
+
+      transaction.update(currentUserRef, {
+        Friends: updatedFriends,
+      });
+    });
+  } catch (err: any) {
+    console.error('Failed to remove friend:', err);
+    throw new Error(err.message || 'Failed to remove friend');
+  }
+}
+
+/**
+ * Checks if a user is in the current user's friends list
+ */
+export async function isFriend(targetUserId: string): Promise<boolean> {
+  try {
+    const currentUser = await getCurrentUser();
+    const friends = currentUser.Friends || [];
+    
+    return friends.some((friendRef) => friendRef.id === targetUserId);
+  } catch (err: any) {
+    console.error('Failed to check friendship:', err);
+    return false;
+  }
+}
