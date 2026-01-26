@@ -12,9 +12,9 @@ import {
 
 import { db, rtdb } from '@/lib/firebase';
 import { trimWrappingQuotes } from '@/utils/text';
-import { InstallButton } from '@/src/components/install-button';
-import { CountdownTimer } from '@/src/components/countdown-timer';
-import { PreviewCard } from '@/src/components/preview-card';
+import { InstallButton } from '@/components/install-button';
+import { CountdownTimer } from '@/components/countdown-timer';
+import { PreviewCard } from '@/components/preview-card';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -218,7 +218,7 @@ export default function Home() {
 
   return (
     <div className="flex h-full bg-white font-sans">
-      <main className="flex flex-col h-full w-full p-6 pr-0">
+      <main className="flex flex-col h-full w-full pl-6 pr-0">
         {targetEpoch ? (
           <CountdownTimer targetUnixEpoch={targetEpoch} className='mx-7 mr-13'/>
         ) : (
