@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, Circle, CircleMarker } from 'react-leaflet';
 import L from 'leaflet';
 import { useGeolocation } from '@/hooks/useGeolocation';
@@ -76,10 +76,12 @@ export function MapContent({ activityData, className }: MapContentProps) {
 
     const [routeCoords, setRouteCoords] = useState<Array<[number, number]>>([]);
     const [routeError, setRouteError] = useState<string | null>(null);
+    const lastActivityKeyRef = useRef<string | null>(null);
+    const boundsKeyRef = useRef<string | null>(null);
+    const hasFitRef = useRef(false);
 
     useEffect(() => {
         setRouteError(null);
-        setRouteCoords([]);
         if (!userLatLng || !activityLatLng) return;
 
         const fetchRoute = async () => {
@@ -100,34 +102,48 @@ export function MapContent({ activityData, className }: MapContentProps) {
         fetchRoute();
     }, [userLatLng?.[0], userLatLng?.[1], activityLatLng?.[0], activityLatLng?.[1]]);
 
-    function FitBounds({ points }: { points: Array<[number, number]> }) {
+    const [initialCenter, setInitialCenter] = useState<[number, number] | null>(null);
+
+    useEffect(() => {
+        if (!initialCenter && (userLatLng || activityLatLng)) {
+            setInitialCenter((activityLatLng ?? userLatLng) ?? [centerLatitude, centerLongitude]);
+        }
+    }, [initialCenter, userLatLng, activityLatLng, centerLatitude, centerLongitude]);
+
+    function FitBounds({ points, boundsKey }: { points: Array<[number, number]>; boundsKey: string | null }) {
         const map = useMap();
-        if (points.length === 2) {
+        useEffect(() => {
+            if (points.length !== 2 || !boundsKey) return;
+            if (hasFitRef.current) return;
+            if (boundsKeyRef.current === boundsKey) return;
+            boundsKeyRef.current = boundsKey;
+            hasFitRef.current = true;
             const bounds = L.latLngBounds(points);
             map.fitBounds(bounds, { padding: [24, 24] });
-        }
+        }, [map, points, boundsKey]);
+
         return null;
     }
 
-    function RecenterOnUser({ target }: { target: [number, number] | null }) {
-        const map = useMap();
-        useEffect(() => {
-            if (target) {
-                map.setView(target, map.getZoom(), { animate: true });
-            }
-        }, [target]);
-        return null;
+    const activityKey = activityLatLng ? `${activityLatLng[0]},${activityLatLng[1]}` : null;
+    if (activityKey && lastActivityKeyRef.current !== activityKey) {
+        lastActivityKeyRef.current = activityKey;
+        boundsKeyRef.current = null;
+        hasFitRef.current = false;
     }
+
+    const boundsKey = routeCoords.length > 0
+        ? `route:${routeCoords[0][0]},${routeCoords[0][1]}|${routeCoords[routeCoords.length - 1][0]},${routeCoords[routeCoords.length - 1][1]}`
+        : (userLatLng && activityLatLng ? `points:${activityLatLng[0]},${activityLatLng[1]}` : null);
 
     return (
         <div className={`w-full h-screen ${className ?? ''}`}>
             <MapContainer
-                center={[centerLatitude, centerLongitude]}
+                center={initialCenter ?? [centerLatitude, centerLongitude]}
                 zoom={13}
                 scrollWheelZoom={false}
                 className="w-full h-full"
             >
-                                <RecenterOnUser target={userLatLng} />
                 <TileLayer
                     attribution='&copy; OpenStreetMap contributors &copy; CARTO'
                     url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
@@ -145,7 +161,6 @@ export function MapContent({ activityData, className }: MapContentProps) {
                             radius={120}
                             pathOptions={{ color: '#0ea5e9', fillColor: '#0ea5e9', fillOpacity: 0.15 }}
                         />
-                        <Popup position={userLatLng}>You are here</Popup>
                     </>
                 )}
 
@@ -158,10 +173,10 @@ export function MapContent({ activityData, className }: MapContentProps) {
                 {routeCoords.length > 0 ? (
                     <>
                         <Polyline positions={routeCoords} pathOptions={{ color: '#0ea5e9', weight: 4 }} />
-                        <FitBounds points={[routeCoords[0], routeCoords[routeCoords.length - 1]]} />
+                        <FitBounds points={[routeCoords[0], routeCoords[routeCoords.length - 1]]} boundsKey={boundsKey} />
                     </>
                 ) : (
-                    userLatLng && activityLatLng && <FitBounds points={[userLatLng, activityLatLng]} />
+                    userLatLng && activityLatLng && <FitBounds points={[userLatLng, activityLatLng]} boundsKey={boundsKey} />
                 )}
 
                 {routeError && (
