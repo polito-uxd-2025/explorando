@@ -28,13 +28,13 @@ export async function getCurrentUser(): Promise<UserData> {
     const snapshot = await get(currentIdRef);
 
     if (!snapshot.exists()) {
-      throw new Error('No user ID found in database');
+      throw new Error('Nessun ID utente trovato nel database');
     }
 
     userId = snapshot.val();
   } catch (err: any) {
-    console.error('Failed to fetch user ID:', err);
-    throw new Error(err.message || 'Failed to fetch user ID');
+    console.error('Impossibile recuperare l\'ID utente:', err);
+    throw new Error(err.message || 'Impossibile recuperare l\'ID utente');
   }
 
   // Get user document from Firestore
@@ -43,7 +43,7 @@ export async function getCurrentUser(): Promise<UserData> {
     const userDocSnapshot = await getDoc(userDocRef);
 
     if (!userDocSnapshot.exists()) {
-      throw new Error('User document not found');
+      throw new Error('Documento utente non trovato');
     }
 
     return {
@@ -51,8 +51,8 @@ export async function getCurrentUser(): Promise<UserData> {
       ...userDocSnapshot.data(),
     } as UserData;
   } catch (err: any) {
-    console.error('Failed to fetch user document:', err);
-    throw new Error(err.message || 'Failed to fetch user document');
+    console.error('Impossibile recuperare il documento utente:', err);
+    throw new Error(err.message || 'Impossibile recuperare il documento utente');
   }
 }
 
@@ -78,7 +78,7 @@ export async function getUserData(
       const snapshot = await getDocs(q);
 
       if (snapshot.empty) {
-        throw new Error(`User with username "${input}" not found`);
+        throw new Error(`Utente con username "${input}" non trovato`);
       }
 
       userDocSnapshot = snapshot.docs[0];
@@ -89,7 +89,7 @@ export async function getUserData(
     }
 
     if (!userDocSnapshot.exists()) {
-      throw new Error('User document not found');
+      throw new Error('Documento utente non trovato');
     }
 
     return {
@@ -97,8 +97,8 @@ export async function getUserData(
       ...userDocSnapshot.data(),
     } as UserData;
   } catch (err: any) {
-    console.error('Failed to fetch user data:', err);
-    throw new Error(err.message || 'Failed to fetch user data');
+    console.error('Impossibile recuperare i dati utente:', err);
+    throw new Error(err.message || 'Impossibile recuperare i dati utente');
   }
 }
 
@@ -115,8 +115,8 @@ export async function createUser(
       ...data,
     } as UserData;
   } catch (err: any) {
-    console.error('Failed to create user:', err);
-    throw new Error(err.message || 'Failed to create user');
+    console.error('Impossibile creare l\'utente:', err);
+    throw new Error(err.message || 'Impossibile creare l\'utente');
   }
 }
 
@@ -132,8 +132,8 @@ export async function addItemToUser(itemId: string): Promise<void> {
       Items: arrayUnion(itemRef),
     });
   } catch (err: any) {
-    console.error('Failed to add item to user:', err);
-    throw new Error(err.message || 'Failed to add item to user');
+    console.error('Impossibile aggiungere l\'oggetto all\'utente:', err);
+    throw new Error(err.message || 'Impossibile aggiungere l\'oggetto all\'utente');
   }
 }
 
@@ -148,7 +148,7 @@ export async function purchaseItem(itemId: string, cost: number): Promise<void> 
   await runTransaction(db, async (transaction) => {
     const userSnap = await transaction.get(userRef);
     if (!userSnap.exists()) {
-      throw new Error('User document not found');
+      throw new Error('Documento utente non trovato');
     }
 
     const data = userSnap.data() as Partial<UserData>;
@@ -177,8 +177,8 @@ export async function addFriend(targetUserId: string): Promise<void> {
       Friends: arrayUnion(targetUserRef),
     });
   } catch (err: any) {
-    console.error('Failed to add friend:', err);
-    throw new Error(err.message || 'Failed to add friend');
+    console.error('Impossibile aggiungere l\'amico:', err);
+    throw new Error(err.message || 'Impossibile aggiungere l\'amico');
   }
 }
 
@@ -195,7 +195,7 @@ export async function removeFriend(targetUserId: string): Promise<void> {
     await runTransaction(db, async (transaction) => {
       const userSnap = await transaction.get(currentUserRef);
       if (!userSnap.exists()) {
-        throw new Error('User document not found');
+        throw new Error('Documento utente non trovato');
       }
 
       const data = userSnap.data() as Partial<UserData>;
@@ -211,8 +211,8 @@ export async function removeFriend(targetUserId: string): Promise<void> {
       });
     });
   } catch (err: any) {
-    console.error('Failed to remove friend:', err);
-    throw new Error(err.message || 'Failed to remove friend');
+    console.error('Impossibile rimuovere l\'amico:', err);
+    throw new Error(err.message || 'Impossibile rimuovere l\'amico');
   }
 }
 
@@ -226,7 +226,7 @@ export async function isFriend(targetUserId: string): Promise<boolean> {
     
     return friends.some((friendRef) => friendRef.id === targetUserId);
   } catch (err: any) {
-    console.error('Failed to check friendship:', err);
+    console.error('Impossibile verificare l\'amicizia:', err);
     return false;
   }
 }
