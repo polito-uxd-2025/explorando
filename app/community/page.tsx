@@ -98,7 +98,7 @@ export default function Profile() {
 
     try {
       setSearching(true);
-      const foundUser = await getUserData(trimmed, true);
+      const foundUser = await getUserData(trimmed.toLowerCase(), true);
       setSearchResult(foundUser);
     } catch (err: any) {
       setSearchError(err.message || 'Utente non trovato');
